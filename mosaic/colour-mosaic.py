@@ -2,6 +2,7 @@
 
 import math
 import os
+import random
 import sys
 
 from PIL import Image
@@ -29,14 +30,20 @@ def average_colour(pixels):
 
 
 if __name__ == "__main__":
+    PIXEL_SIZE = 32
+
     images = []
     image_dir = sys.argv[1]
     for name in os.listdir(image_dir):
         path = os.path.join(image_dir, name)
+
         image = Image.open(path)
+        image = image.resize((PIXEL_SIZE, PIXEL_SIZE))
         pixels = image.load()
+
         images.append({
             "image": image,
+            "pixels": pixels,
             "path": path,
             "colour": average_colour(pixels)
         })
@@ -44,5 +51,27 @@ if __name__ == "__main__":
     input_image = sys.argv[2]
     image = Image.open(input_image)
     pixels = image.load()
+    w, h = image.size
 
-    print(pixels)
+    output_dims = (w * PIXEL_SIZE, h * PIXEL_SIZE)
+    output_image = Image.new("RGB", output_dims)
+
+    pos_w = 0
+    pos_h = 0
+    for x in range(0, w):
+        for y in range(0, h):
+            for i in images:
+                i["distance"] = euclidean_distance(pixels[x, y], i["colour"])
+
+            best_matches = sorted(images, key=lambda a: a["distance"])
+            choice = random.choice(best_matches)
+
+            output_image.paste(choice["image"], (pos_w, pos_h))
+
+            pos_w += PIXEL_SIZE
+            if pos_w == output_dims[0]:
+                pos_w = 0
+                pos_h += PIXEL_SIZE
+
+
+    output_image.show()
