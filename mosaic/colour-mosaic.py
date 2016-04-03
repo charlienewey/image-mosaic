@@ -8,13 +8,17 @@ import sys
 from PIL import Image
 
 
-def euclidean_distance(a, b):
+def distance(a, b):
+    def _difference(a, b):
+        if a > b: return a - b
+        elif b > a: return b - a
+        else: return 0
+
     assert len(a) == len(b)
-    dist = 0.0
+    dist = 0
     for i in range(0, len(a)):
-        diff = math.pow(a[i] - b[i], 2)
-        dist += diff
-    return math.sqrt(dist)
+        dist += _difference(a[i], b[i])
+    return dist
 
 
 def average_colour(pixels):
@@ -61,9 +65,9 @@ if __name__ == "__main__":
     for x in range(0, w):
         for y in range(0, h):
             for i in images:
-                i["distance"] = euclidean_distance(pixels[x, y], i["colour"])
+                i["distance"] = distance(pixels[x, y], i["colour"])
 
-            best_matches = sorted(images, key=lambda a: a["distance"])[0:10]
+            best_matches = sorted(images, key=lambda a: a["distance"])[0:5]
             choice = random.choice(best_matches)
 
             output_image.paste(choice["image"], (pos_w, pos_h))
