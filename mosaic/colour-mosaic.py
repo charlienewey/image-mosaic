@@ -30,7 +30,7 @@ def average_colour(pixels):
 
 
 if __name__ == "__main__":
-    PIXEL_SIZE = 32
+    PIXEL_SIZE = 64
 
     images = []
     image_dir = sys.argv[1]
@@ -63,15 +63,14 @@ if __name__ == "__main__":
             for i in images:
                 i["distance"] = euclidean_distance(pixels[x, y], i["colour"])
 
-            best_matches = sorted(images, key=lambda a: a["distance"])
+            best_matches = sorted(images, key=lambda a: a["distance"])[0:10]
             choice = random.choice(best_matches)
 
             output_image.paste(choice["image"], (pos_w, pos_h))
 
-            pos_w += PIXEL_SIZE
-            if pos_w == output_dims[0]:
-                pos_w = 0
-                pos_h += PIXEL_SIZE
+            pos_h += PIXEL_SIZE
+            if pos_h == output_dims[1]:
+                pos_h = 0
+                pos_w += PIXEL_SIZE
 
-
-    output_image.show()
+    output_image.save(sys.argv[3])
