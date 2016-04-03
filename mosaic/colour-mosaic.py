@@ -66,9 +66,8 @@ if __name__ == "__main__":
         for y in range(0, h):
             for i in images:
                 i["distance"] = distance(pixels[x, y], i["colour"])
-
-            best_matches = sorted(images, key=lambda a: a["distance"])[0:5]
-            choice = random.choice(best_matches)
+            best_matches = sorted(images, key=lambda a: a["distance"])
+            choice = random.choice(best_matches[0:5])
 
             output_image.paste(choice["image"], (pos_w, pos_h))
 
