@@ -1,1 +1,6 @@
 *.jpg
+.DS_Store
+.Python
+bin
+include
+lib
